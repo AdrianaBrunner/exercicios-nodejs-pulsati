@@ -10,6 +10,6 @@ app.get('/livros', getAllLivros);
 app.get('/livrosComAutoreEditora/:codigo', getLivrosComAutoreEditora);
 app.put('/livros/:codigo', updateLivros);
 app.delete('/livros/:codigo', deleteAutores);
-app.delete('/livrosComAutoreEditora/:codigo', deleteLivrosComAutoreEditora)
+app.delete('/deletelivrosComAutoreEditora/:codigo', deleteLivrosComAutoreEditora)
 
 app.listen(8000);

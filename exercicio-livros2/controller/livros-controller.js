@@ -54,40 +54,28 @@ exports.getLivrosComAutoreEditora = async (req, res) => {
     const autores = await Autores.findByPk(codigoAutor)
     const nomeAutor = autores.nomeAutor
     const sobrenomeAutor = autores.sobrenomeAutor
-        res.json({livro,nomeAutor,sobrenomeAutor})
+    res.json({ livro, nomeAutor, sobrenomeAutor })
 }
 
 exports.deleteLivrosComAutoreEditora = async (req, res) => {
     const codigo = req.params.codigo;
     const livro = await Livros.findByPk(codigo)
-    .then(livro => {
-        return livro.destroy();
-    })
-    .then(() => {
-        // verificando se é necessário deletar a editora do livro
-        Editoras.findByPk(idEditora)
-            .then(editora => {
-                editora.getLivros()
-                    .then(livros => {
-                        if (livros.length === 0) {
-                            editora.destroy();
-                        }
-                    });
-            });
+    const codigoAutor = livro.idAutor;
+    const codigoEditora = livro.idEditora;
+    const autores = await Autores.findByPk(codigoAutor)
+    const editoras = await Editoras.findByPk(codigoEditora)
+    const countAutores = await Autores.count()
+    const countEditoras = await Editoras.count();
 
-        // verificando se é necessário deletar o autor do livro
-        Autores.findByPk(autor_id)
-            .then(autor => {
-                autor.getLivros()
-                    .then(livros => {
-                        if (livros.length === 0) {
-                            autor.destroy();
-                        }
-                    });
-            });
-    })
-    .catch(err => {
-        // aqui você trata o erro, se houver algum
-    });
+    if (countAutores == 1 && livro.idAutor == codigoAutor) {
+        await livro.destroy();
+        autores.destroy();
 
+    }
+    if (countEditoras == 1 && livro.idEditora == codigoEditora) {
+        await livro.destroy();
+        editoras.destroy();
+    }
+    
+    res.json({ data: 'Livro deletado com sucesso' });
 }
