@@ -20,6 +20,7 @@ exports.createVenda = async (req,res) => {
 }
 
 exports.getVendas = async (req,res) => {
-    const vendas = await Venda.findAll();
+    const vendas = await Venda.findAll({order: [['idVenda', 'DESC']]
+});
     res.json(vendas);
 }
